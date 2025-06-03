@@ -7,11 +7,11 @@ Este projeto implementa um sistema de detecção de atividades suspeitas em rede
 Detectar padrões incomuns de tráfego de rede que possam indicar atividades maliciosas, como ataques, botnets ou exfiltração de dados.
 
 ## 📁 Estrutura do Projeto
-- `data/`: dados brutos e processados
+- `data/`: Dados brutos e Processados
 - `notebooks/`: notebooks de análise e modelagem
 - `src/`: código-fonte da aplicação
 - `dashboard/`: interface visual com Streamlit
-- `tests/`: testes automatizados
+- `tests/`: testes com automatização
 - `.github/workflows`: automação com GitHub Actions
 
 ## ▶️ Como rodar
