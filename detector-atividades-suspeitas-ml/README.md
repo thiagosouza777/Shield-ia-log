@@ -1,7 +1,7 @@
 
 # 🛡️ Detector de Atividades Suspeitas com Machine Learning
 
-Este projeto implementa um sistema de detecção de atividades suspeitas em redes corporativas utilizando algoritmos de aprendizado de máquina supervisionado e detecção de anomalias.
+Este projeto foi desenvolvido com o objetivo de auxiliar times de SOC e equipes Blue Team em geral. A proposta é apoiar essas equipes na identificação de possíveis ataques, utilizando a inteligência artificial como aliada na detecção e resposta a ameaças.
 
 ## 🎯 Objetivo
 Detectar padrões incomuns de tráfego de rede que possam indicar atividades maliciosas, como ataques, botnets ou exfiltração de dados.
