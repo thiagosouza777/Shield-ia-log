@@ -1,51 +1,76 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
-from datetime import datetime, timedelta
+import altair as alt
 
-st.set_page_config(page_title="Detector de Atividades Suspeitas", layout="wide")
+# Configuração de página
+st.set_page_config(
+    page_title="Detector de Atividades Suspeitas",
+    page_icon="🛡️",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-# Estilo escuro com azul
-st.markdown("""
+# Tema escuro
+st.markdown(
+    """
     <style>
-        .main {
-            background-color: #0f1117;
-            color: #c0d6f9;
+        body {
+            background-color: #0e1117;
+            color: #c9d1d9;
         }
-        h1, h2, h3 {
-            color: #4dabf7;
+        .main {
+            background-color: #0e1117;
+        }
+        h1 {
+            color: #58a6ff;
         }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
+# Título
 st.title("🛡️ Dashboard de Detecção de Atividades Suspeitas")
 
-# ======= Simulação de Dados =======
-np.random.seed(42)
-horas = pd.date_range(datetime.now() - timedelta(hours=23), periods=24, freq='H')
-dados = pd.DataFrame({
-    "Hora": horas,
-    "Eventos Suspeitos": np.random.poisson(lam=20, size=24),
-    "IPs Únicos": np.random.randint(5, 15, size=24),
-    "Tipo de Evento": np.random.choice(["Port Scan", "Tentativa de Login", "Payload Suspeito"], size=24)
-})
+# Simulando dados
+dias = pd.date_range(end=pd.Timestamp.today(), periods=15)
+dados_simulados = {
+    "Data": dias,
+    "Conexões Suspeitas": np.random.randint(5, 100, size=15),
+    "Anomalias Detectadas": np.random.randint(0, 20, size=15)
+}
+df = pd.DataFrame(dados_simulados)
 
-# ======= KPIs ==========
-col1, col2, col3 = st.columns(3)
-col1.metric("🚨 Total de Eventos", int(dados["Eventos Suspeitos"].sum()))
-col2.metric("🌐 IPs únicos", dados["IPs Únicos"].sum())
-col3.metric("🕒 Picos > 30 eventos", (dados["Eventos Suspeitos"] > 30).sum())
+# Gráfico de conexões suspeitas
+st.subheader("📈 Conexões Suspeitas (últimos 15 dias)")
+chart1 = alt.Chart(df).mark_line(point=True).encode(
+    x='Data:T',
+    y='Conexões Suspeitas:Q',
+    tooltip=['Data:T', 'Conexões Suspeitas']
+).properties(
+    width=800,
+    height=300
+).configure_mark(
+    color='#58a6ff'
+)
 
-# ======= Gráfico de Linha =========
-fig = px.line(dados, x="Hora", y="Eventos Suspeitos", title="Eventos Suspeitos por Hora", markers=True)
-fig.update_layout(template="plotly_dark", title_font_color='lightblue')
-st.plotly_chart(fig, use_container_width=True)
+st.altair_chart(chart1)
 
-# ======= Alerta Simulado =========
-if dados["Eventos Suspeitos"].iloc[-1] > 30:
-    st.error("🚨 Alerta: Volume elevado de eventos na última hora!")
+# Gráfico de anomalias
+st.subheader("🚨 Anomalias Detectadas")
+chart2 = alt.Chart(df).mark_bar().encode(
+    x='Data:T',
+    y='Anomalias Detectadas:Q',
+    tooltip=['Data:T', 'Anomalias Detectadas']
+).properties(
+    width=800,
+    height=300
+).configure_mark(
+    color='#ff4b4b'
+)
 
-# ======= Tabela =========
-with st.expander("🔍 Ver detalhes por hora"):
-    st.dataframe(dados.style.background_gradient(cmap="Blues"))
+st.altair_chart(chart2)
+
+# Mensagem final
+st.info("Os dados acima são apenas uma simulação. Integrações com logs reais devem ser configuradas.")
